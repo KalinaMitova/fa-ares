@@ -1,6 +1,6 @@
 const express = require('express')
 const authCheck = require('../middleware/auth-check');
-const Player = require('../models/Player');
+const Team = require('../models/Team');
 
 const router = new express.Router()
 
@@ -71,7 +71,7 @@ router.post('/create', authCheck, (req, res) => {
     })
   }
 
-  Player.create(furniture)
+  Team.create(furniture)
     .then(() => {
       res.status(200).json({
         success: true,
@@ -85,7 +85,7 @@ router.get('/player/all', authCheck ,(req, res) => {
   const page = parseInt(req.query.page) || 1
   // const search = req.query.search
 
-  Player.find({})
+  Team.find({})
     .then((furniture) => {
       return res.status(200).json(furniture)
     })
@@ -93,7 +93,7 @@ router.get('/player/all', authCheck ,(req, res) => {
 
 router.get('/details/:id', authCheck, (req, res) => {
   const id = req.params.id
-  Player.findById(id)
+  Team.findById(id)
     .then((furniture) => {
       if (!furniture) {
         return res.status(404).json({
@@ -124,7 +124,7 @@ router.get('/details/:id', authCheck, (req, res) => {
 router.get('/user', authCheck, (req, res) => {
   const user = req.user._id
 
-  Player.find({creator: user})
+  Team.find({creator: user})
     .then((furniture) => {
       return res.status(200).json(furniture)
     })
@@ -134,7 +134,7 @@ router.delete('/delete/:id', authCheck, (req, res) => {
   const id = req.params.id
   const user = req.user._id
 
-  Player.findById(id)
+  Team.findById(id)
     .then((furniture) => {
       if (!furniture) {
         return res.status(200).json({
@@ -150,7 +150,7 @@ router.delete('/delete/:id', authCheck, (req, res) => {
          })
       }
 
-      Player.findByIdAndDelete(id)
+      Team.findByIdAndDelete(id)
         .then(() => {
           return res.status(200).json({
             success: true,
@@ -187,7 +187,7 @@ router.put('/edit/:id', authCheck, (req, res) => {
     })
   }
 
-  Player.findByIdAndUpdate(id, furniture)
+  Team.findByIdAndUpdate(id, furniture)
     .then(() => {
       return res.status(200).json({
         success: true,
@@ -199,7 +199,7 @@ router.put('/edit/:id', authCheck, (req, res) => {
 router.get('/:id', authCheck, (req, res) => {
   const id = req.params.id
 
-  Player.findById(id)
+  Team.findById(id)
     .then(furniture => {
       if (!furniture) {
         return res.status(404).json({

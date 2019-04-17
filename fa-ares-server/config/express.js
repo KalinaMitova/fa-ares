@@ -4,8 +4,10 @@ const passport = require('passport')
 const localSignupStrategy = require('../passport/local-signup')
 const localLoginStrategy = require('../passport/local-login')
 const authRoutes = require('../routes/auth')
+const playersRoutes = require('../routes/player')
+const coachRoutes = require('../routes/coach')
+const teamRoutes = require('../routes/team')
 const clubRoutes = require('../routes/fa-ares')
-const statsRoutes = require('../routes/stats')
 
 module.exports = app => {
   app.use(bodyParser.urlencoded({
@@ -23,5 +25,7 @@ module.exports = app => {
   // routes
   app.use('/auth', authRoutes)
   app.use('/fa-ares', clubRoutes)
-  app.use('/stats', statsRoutes)
+  app.use('/fa-ares/player', playersRoutes)
+  app.use('/fa-ares/coach', coachRoutes)
+  app.use('/fa-ares/team', teamRoutes)
 }

@@ -1,6 +1,6 @@
 const express = require('express')
 const authCheck = require('../middleware/auth-check');
-const Player = require('../models/Player');
+const Coach = require('../models/Coach');
 
 const router = new express.Router()
 
@@ -9,44 +9,38 @@ function validateFurnitureForm (payload) {
   let isFormValid = true
   let message = ''
 
-  payload.number = parseInt(payload.number)
+  payload.year = parseInt(payload.year)
+  payload.price = parseInt(payload.price)
 
-  if (!payload || typeof payload.firstName !== 'string' || payload.firstName.trim().length < 3) {
+  if (!payload || typeof payload.make !== 'string' || payload.make.length < 3) {
     isFormValid = false
-    errors.make = 'First name must be more than 3 symbols.'
+    errors.make = 'Make must be more than 3 symbols.'
   }
 
-  if (!payload || typeof payload.lastName !== 'string' || payload.lastName.trim().length < 3) {
+  if (!payload || typeof payload.model !== 'string' || payload.model.length < 3) {
     isFormValid = false
-    errors.model = 'Last name must be more than 3 symbols.'
+    errors.model = 'Model must be more than 3 symbols.'
   }
 
-
-  //check year
-  if (!payload || !payload.dateOfBirth) {
+  if (!payload || !payload.year || payload.year < 1950 || payload.year > 2050) {
     isFormValid = false
-    errors.year = 'Year must be after 2013'
+    errors.year = 'Year must be between 1950 and 2050.'
   }
 
-  if (!payload || !payload.number || payload.number < 1) {
+  if (!payload || typeof payload.description !== 'string' || payload.description.length < 10) {
     isFormValid = false
-    errors.price = 'Number must be a positive number.'
+    errors.description = 'Description must be more than 10 symbols.'
   }
 
-  if (!payload || typeof payload.imageUrl !== 'string' || payload.imageUrl.length.trim() === 0) {
+  if (!payload || !payload.price || payload.price < 0) {
+    isFormValid = false
+    errors.price = 'Price must be a positive number.'
+  }
+
+  if (!payload || typeof payload.image !== 'string' || payload.image.length === 0) {
     isFormValid = false
     errors.image = 'Image URL is required.'
-    if (payload.imageUrl.startsWitn('http') < 0) {
-      isFormValid = false
-      errors.image = 'Image URL must  starts with "http" or "https".'
-    }
-    if (!(payload.imageUrl.endsWith('jpg') >= 0 || payload.imageUrl.endsWith('png') >= 0)) {
-      isFormValid = false
-      errors.image = 'Image URL must  ends with "jpg" or "png".'
-    }
   }
-
-
 
   if (!isFormValid) {
     message = 'Check the form for errors.'
@@ -71,7 +65,7 @@ router.post('/create', authCheck, (req, res) => {
     })
   }
 
-  Player.create(furniture)
+  Coach.create(furniture)
     .then(() => {
       res.status(200).json({
         success: true,
@@ -85,7 +79,7 @@ router.get('/player/all', authCheck ,(req, res) => {
   const page = parseInt(req.query.page) || 1
   // const search = req.query.search
 
-  Player.find({})
+  Coach.find({})
     .then((furniture) => {
       return res.status(200).json(furniture)
     })
@@ -93,7 +87,7 @@ router.get('/player/all', authCheck ,(req, res) => {
 
 router.get('/details/:id', authCheck, (req, res) => {
   const id = req.params.id
-  Player.findById(id)
+  Coach.findById(id)
     .then((furniture) => {
       if (!furniture) {
         return res.status(404).json({
@@ -124,7 +118,7 @@ router.get('/details/:id', authCheck, (req, res) => {
 router.get('/user', authCheck, (req, res) => {
   const user = req.user._id
 
-  Player.find({creator: user})
+  Coach.find({creator: user})
     .then((furniture) => {
       return res.status(200).json(furniture)
     })
@@ -134,7 +128,7 @@ router.delete('/delete/:id', authCheck, (req, res) => {
   const id = req.params.id
   const user = req.user._id
 
-  Player.findById(id)
+  Coach.findById(id)
     .then((furniture) => {
       if (!furniture) {
         return res.status(200).json({
@@ -150,7 +144,7 @@ router.delete('/delete/:id', authCheck, (req, res) => {
          })
       }
 
-      Player.findByIdAndDelete(id)
+      Coach.findByIdAndDelete(id)
         .then(() => {
           return res.status(200).json({
             success: true,
@@ -187,7 +181,7 @@ router.put('/edit/:id', authCheck, (req, res) => {
     })
   }
 
-  Player.findByIdAndUpdate(id, furniture)
+  Coach.findByIdAndUpdate(id, furniture)
     .then(() => {
       return res.status(200).json({
         success: true,
@@ -199,7 +193,7 @@ router.put('/edit/:id', authCheck, (req, res) => {
 router.get('/:id', authCheck, (req, res) => {
   const id = req.params.id
 
-  Player.findById(id)
+  Coach.findById(id)
     .then(furniture => {
       if (!furniture) {
         return res.status(404).json({
