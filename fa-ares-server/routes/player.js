@@ -81,13 +81,24 @@ router.post('/create', authCheck, (req, res) => {
     })
 })
 
-router.get('/player/all', authCheck ,(req, res) => {
+router.get('/playPosition', authCheck ,(req, res) => {
+  Player.schema
+    .path('playPosition')
+    .schema
+    .path('type')
+    .enumValues
+    .then((positions) =>{
+      return res.status(200).json(positions)
+    })
+})
+
+router.get('/all', authCheck ,(req, res) => {
   const page = parseInt(req.query.page) || 1
   // const search = req.query.search
 
   Player.find({})
-    .then((furniture) => {
-      return res.status(200).json(furniture)
+    .then((players) => {
+      return res.status(200).json(players)
     })
 })
 

@@ -13,7 +13,7 @@ const teamSchema = new mongoose.Schema({
   players:[{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Player'}],
-  coatchs: [{
+  coachs: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Coach'}],
 });

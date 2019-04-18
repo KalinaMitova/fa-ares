@@ -1,36 +1,20 @@
 const express = require('express')
 const authCheck = require('../middleware/auth-check');
+const adminCheck = require('../middleware/admin-check');
 const Team = require('../models/Team');
 
 const router = new express.Router()
 
-function validateFurnitureForm (payload) {
+function validateTeamForm (payload) {
   const errors = {}
   let isFormValid = true
   let message = ''
 
-  payload.number = parseInt(payload.number)
+  // payload.number = parseInt(payload.number)
 
-  if (!payload || typeof payload.firstName !== 'string' || payload.firstName.trim().length < 3) {
+  if (!payload || typeof payload.name !== 'string' || payload.name.trim().length < 3) {
     isFormValid = false
-    errors.make = 'First name must be more than 3 symbols.'
-  }
-
-  if (!payload || typeof payload.lastName !== 'string' || payload.lastName.trim().length < 3) {
-    isFormValid = false
-    errors.model = 'Last name must be more than 3 symbols.'
-  }
-
-
-  //check year
-  if (!payload || !payload.dateOfBirth) {
-    isFormValid = false
-    errors.year = 'Year must be after 2013'
-  }
-
-  if (!payload || !payload.number || payload.number < 1) {
-    isFormValid = false
-    errors.price = 'Number must be a positive number.'
+    errors.make = 'Name must be more than 3 symbols.'
   }
 
   if (!payload || typeof payload.imageUrl !== 'string' || payload.imageUrl.length.trim() === 0) {
@@ -46,8 +30,6 @@ function validateFurnitureForm (payload) {
     }
   }
 
-
-
   if (!isFormValid) {
     message = 'Check the form for errors.'
   }
@@ -59,10 +41,9 @@ function validateFurnitureForm (payload) {
   }
 }
 
-router.post('/create', authCheck, (req, res) => {
-  const furniture = req.body
-  furniture.creator = req.user._id
-  const validationResult = validateFurnitureForm(furniture)
+router.post('/create', authCheck,adminCheck, (req, res) => {
+  const team = req.body
+  const validationResult = validateTeamForm(team)
   if (!validationResult.success) {
     return res.status(400).json({
       success: false,
@@ -71,12 +52,12 @@ router.post('/create', authCheck, (req, res) => {
     })
   }
 
-  Team.create(furniture)
+  Team.create(team)
     .then(() => {
       res.status(200).json({
         success: true,
-        message: 'Furniture added successfully.',
-        furniture
+        message: `Team ${team.name} added successfully.`,
+        team
       })
     })
 })
@@ -86,8 +67,8 @@ router.get('/player/all', authCheck ,(req, res) => {
   // const search = req.query.search
 
   Team.find({})
-    .then((furniture) => {
-      return res.status(200).json(furniture)
+    .then((team) => {
+      return res.status(200).json(team)
     })
 })
 
@@ -121,29 +102,29 @@ router.get('/details/:id', authCheck, (req, res) => {
 })
 
 
-router.get('/user', authCheck, (req, res) => {
-  const user = req.user._id
+// router.get('/user', authCheck, (req, res) => {
+//   const user = req.user._id
 
-  Team.find({creator: user})
-    .then((furniture) => {
-      return res.status(200).json(furniture)
-    })
-})
+//   Team.find({creator: user})
+//     .then((furniture) => {
+//       return res.status(200).json(furniture)
+//     })
+// })
 
-router.delete('/delete/:id', authCheck, (req, res) => {
+router.delete('/delete/:id', authCheck,adminCheck, (req, res) => {
   const id = req.params.id
   const user = req.user._id
 
   Team.findById(id)
-    .then((furniture) => {
-      if (!furniture) {
+    .then((team) => {
+      if (!team) {
         return res.status(200).json({
           success: false,
-          message: 'Furniture does not exists!'
+          message: 'Team does not exists!'
         })
       }
 
-      if ((furniture.creator.toString() != user && !req.user.roles.includes("Admin"))) {
+      if ((team.creator.toString() != user && !req.user.roles.includes("Admin"))) {
          return res.status(401).json({
            success: false,
            message: 'Unauthorized!'
@@ -154,20 +135,20 @@ router.delete('/delete/:id', authCheck, (req, res) => {
         .then(() => {
           return res.status(200).json({
             success: true,
-            message: 'Furniture deleted successfully!'
+            message: 'Team deleted successfully!'
           })
         })
     })
 })
 
-router.put('/edit/:id', authCheck, (req, res) => {
+router.put('/edit/:id', authCheck,adminCheck, (req, res) => {
   const id = req.params.id;
-  const furniture = req.body;
+  const team = req.body;
 
-  if (!furniture) {
+  if (!team) {
     return res.status(404).json({
       success: false,
-      message: 'Furniture does not exists!'
+      message: 'Team does not exists!'
     })
   }
 
@@ -178,7 +159,7 @@ router.put('/edit/:id', authCheck, (req, res) => {
     })
   }
 
-  const validationResult = validateFurnitureForm(furniture)
+  const validationResult = validateTeamForm(team)
   if (!validationResult.success) {
     return res.status(400).json({
       success: false,
@@ -187,11 +168,11 @@ router.put('/edit/:id', authCheck, (req, res) => {
     })
   }
 
-  Team.findByIdAndUpdate(id, furniture)
+  Team.findByIdAndUpdate(id, team)
     .then(() => {
       return res.status(200).json({
         success: true,
-        message: 'Furniture edited successfully!'
+        message: `Team  ${team.name} edited successfully!`
       })
   })
 })
@@ -200,8 +181,8 @@ router.get('/:id', authCheck, (req, res) => {
   const id = req.params.id
 
   Team.findById(id)
-    .then(furniture => {
-      if (!furniture) {
+    .then(team => {
+      if (!team) {
         return res.status(404).json({
           success: false,
           message: 'Entry does not exists!'

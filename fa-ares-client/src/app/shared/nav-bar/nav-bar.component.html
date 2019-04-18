@@ -1,0 +1,32 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav mat-primary " [ngClass]="{hidden: !(isHandset$ | async)}" fixedInViewport="false" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="!(isHandset$ | async)">
+        <mat-toolbar class="mat-primary">Menu</mat-toolbar>
+        <mat-nav-list class="mat-accent">
+            <a mat-list-item href="#">За нас</a>
+            <a mat-list-item href="#">Екип</a>
+            <a mat-list-item href="#">Отбори</a>
+            <a mat-list-item href="#">За фенове</a>
+            <a mat-list-item href="#">Вход</a>
+            <div *ngIf="isLoggedIn" id="profile">
+                <a mat-list-item aria-disabled="true">Здравей, {{username}}!</a>
+                <a mat-list-item aria-disabled="true" (click)="logout()">Изход</a>
+            </div>
+        </mat-nav-list>
+
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar class="mat-primary">
+            <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()" *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+            <img id="logo" src="../../../assets/ares-icon-48x48.png" alt="Back Home">
+            <span id="title">
+        <span>ФУТБОЛНА АКАДЕМИЯ АРЕС - СОФИЯ</span>
+            <br>
+            <span>Съдбата подкрепя смелите</span>
+            </span>
+        </mat-toolbar>
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>

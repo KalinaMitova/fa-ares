@@ -1,0 +1,35 @@
+div.background-image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url("../../../assets/bcg-pct3.jpg");
+    background-size: cover;
+}
+
+div.content {
+    position: absolute;
+    top: 0;
+    right: 200px;
+    bottom: 0;
+    left: 200px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: rgba(0, 0, 0, 0.54);
+    color: #ff5252;
+    height: auto;
+}
+
+p {
+    padding-top: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    text-align: justify;
+}
+
+
+/* body {
+  background-image: url("paper.gif");
+  background-color: #cccccc;
+} */

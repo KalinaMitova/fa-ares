@@ -1,0 +1,20 @@
+@import '~@angular/material/theming';
+@include mat-core();
+$fa-ares-primary: mat-palette($mat-red, A200, #ff867f, #c50e29);
+$fa-ares-accent: mat-palette($mat-grey, 900, #484848, #000000);
+$fa-ares-warn: mat-palette($mat-red);
+$fa-ares-theme: mat-light-theme($fa-ares-primary, $fa-ares-accent, $fa-ares-warn);
+@function my-mat-light-theme-foreground($color) {
+    @return (base: $color, divider: $black-12-opacity, dividers: $black-12-opacity, disabled: rgba($color, 0.38), disabled-button: rgba($color, 0.38), disabled-text: rgba($color, 0.38), hint-text: rgba($color, 0.38), secondary-text: rgba($color, 0.54), icon: rgba($color, 0.54), icons: rgba($color, 0.54), text: rgba($color, 0.87), slider-off: rgba($color, 0.26), slider-off-active: rgba($color, 0.38), slider-min: rgba($color, 0.38));
+}
+
+;
+$black-foreground: my-mat-light-theme-foreground(black);
+$fa-ares-theme-custom: map-merge($fa-ares-theme, (foreground: $black-foreground));
+@include angular-material-theme($fa-ares-theme-custom);
+
+/* For the non-Angular Material items */
+
+// body {
+//     color: black;
+// }
