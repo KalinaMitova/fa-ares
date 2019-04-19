@@ -34,10 +34,20 @@
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
 }
 
+.nav-bar-right {
+    flex: 1 1 auto;
+}
 
-/*проблеми с фоновата снимка*/
+.nav-bar-right {
+    flex: 1 1 1 auto;
+}
 
-
-/* .mat-drawer-container {
-    background-image: "../../../assets/ares-together.jpg"
-} */
+.mat-toolbar a {
+    display: inline-block;
+    margin: 0 10px;
+    color: black;
+    font-size: 16px;
+    text-decoration: none;
+    border-color: black;
+    border-radius: 10px;
+}

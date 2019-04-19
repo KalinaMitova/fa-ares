@@ -22,9 +22,34 @@
             <img id="logo" src="../../../assets/ares-icon-48x48.png" alt="Back Home">
             <span id="title">
         <span>ФУТБОЛНА АКАДЕМИЯ АРЕС - СОФИЯ</span>
-            <br>
+            <!-- <br>
             <span>Съдбата подкрепя смелите</span>
+            <br>
+            <span>Съдбата подкрепя смелите</span> -->
+            <br>
+            <span class="nav-bar-left"></span>
+            <a href="#">За нас</a>
+            <a href="#">Екип</a>
+            <a href="#">Отбори</a>
+            <a href="#">За фенове</a>
+            <span class="nav-bar-right">
+          <a href="#">Вход</a>
+          <span *ngIf="isLoggedIn" id="profile">
+            <a disabled="true">Здравей, {{username}}!</a>
+            <a aria-disabled="true" (click)="logout()">Изход</a>
+          </span>
             </span>
+
+            </span>
+
+
+
+
+
+
+
+
+
         </mat-toolbar>
         <ng-content></ng-content>
     </mat-sidenav-content>
